@@ -18,12 +18,23 @@
                 </tr>
             </tbody>
         </table>
+        <BPagination
+            v-model="currentPage"
+            :total-rows="productLists.total"
+            :per-page="productLists.per_page"
+            first-text="First"
+            prev-text="Prev"
+            next-text="Next"
+            last-text="Last"
+            @page-click="pageClick()"
+        />
     </div>
 </template>
 <script setup>
-import { onMounted, computed } from "vue";
+import { onMounted, computed, ref, nextTick } from "vue";
 import { useStore } from "vuex";
 
+const currentPage = ref(1)
 const $store = useStore();
 
 const productLists = computed(() => {
@@ -31,11 +42,15 @@ const productLists = computed(() => {
 })
 
 onMounted(() => {
-    console.log(`the component is now mounted.`);
-    getProductList()
+    getProductList(currentPage.value)
 });
 
-function getProductList(){
-    $store.dispatch('getProductList')
+const pageClick = async() => {
+    await nextTick()
+    getProductList(currentPage.value)
+}
+
+const getProductList = (page) => {
+    $store.dispatch('getProductList', page)
 }
 </script>

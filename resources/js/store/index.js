@@ -11,8 +11,12 @@ export default createStore({
         }
     },
     actions: {
-        getProductList({commit}){
-            return axios.get('/api/product')
+        getProductList({commit}, page){
+            return axios.get('/api/product',{
+                params:{
+                    page
+                }
+            })
                 .then((res) => {
                     commit('getProductList', res.data)
                 })
