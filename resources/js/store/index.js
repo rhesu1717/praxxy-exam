@@ -2,23 +2,35 @@ import { createStore } from "vuex";
 
 export default createStore({
     state: {
-        productLists: []
+        products: [],
+        categories: [],
     },
     getters: {},
     mutations: {
-        getProductList(state, payload){
-            state.productLists = payload
+        getProducts(state, payload){
+            state.products = payload
+        },
+        getCategories(state, payload){
+            state.categories = payload
         }
     },
     actions: {
-        getProductList({commit}, page){
+        getProducts({commit}, data){
             return axios.get('/api/product',{
-                params:{
-                    page
-                }
-            })
+                    params:{
+                        search: data.search,
+                        category: data.category_id,
+                        page: data.page
+                    }
+                })
                 .then((res) => {
-                    commit('getProductList', res.data)
+                    commit('getProducts', res.data)
+                })
+        },
+        getCategories({commit}, data){
+            return axios.get('/api/category')
+                .then((res) => {
+                    commit('getCategories', res.data)
                 })
         }
     },

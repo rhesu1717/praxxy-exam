@@ -3,22 +3,21 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Interfaces\ProductInterface;
+use App\Interfaces\CategoryInterface;
 use Illuminate\Http\Request;
 
-class ApiProductController extends Controller
+class ApiCategoryController extends Controller
 {
-
     public function __construct(
-        protected ProductInterface $product
+        protected CategoryInterface $category
     ) {
     }
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        return $this->product->list($request);
+        return $this->category->list();
     }
 
     /**

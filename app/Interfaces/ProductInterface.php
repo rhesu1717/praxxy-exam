@@ -3,5 +3,5 @@
 namespace App\Interfaces;
 
 interface ProductInterface {
-    public function list();
+    public function list($request);
 }
