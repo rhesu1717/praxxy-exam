@@ -1,4 +1,12 @@
 import './bootstrap';
+import {createApp} from 'vue'
+import store from './store'
+import ProductListComponent from './components/products/ProductListComponent.vue'
+createApp({})
+    .use(store)
+    .component('ProductList', ProductListComponent)
+    .mount("#app")
+    
 import '@fontsource/source-sans-3/index.css'
 import 'overlayscrollbars/overlayscrollbars.css'
 import { 

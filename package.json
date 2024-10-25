@@ -6,6 +6,7 @@
         "dev": "vite"
     },
     "devDependencies": {
+        "@vitejs/plugin-vue": "^5.1.4",
         "autoprefixer": "^10.4.20",
         "axios": "^1.7.4",
         "concurrently": "^9.0.1",
@@ -20,6 +21,8 @@
         "admin-lte": "^4.0.0-beta2",
         "bootstrap": "^5.3.2",
         "bootstrap-icons": "^1.11.0",
-        "overlayscrollbars": "^2.3.0"
+        "overlayscrollbars": "^2.3.0",
+        "vue": "^3.5.12",
+        "vuex": "^4.0.2"
     }
 }

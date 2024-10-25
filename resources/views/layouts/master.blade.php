@@ -14,7 +14,7 @@
             {{-- BREADCRUMB --}}
             @include('components.breadcrumb')
             <div class="app-content"> <!--begin::Container-->
-                <div class="container-fluid"> <!--begin::Row-->
+                <div id="app" class="container-fluid"> <!--begin::Row-->
                     @yield('content')
                 </div> <!--end::Container-->
             </div> <!--end::App Content-->
