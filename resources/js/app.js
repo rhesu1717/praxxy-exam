@@ -3,11 +3,13 @@ import {createBootstrap} from 'bootstrap-vue-next'
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
 import {createApp} from 'vue'
 import store from './store'
-import ProductListComponent from './components/products/ProductListComponent.vue'
+import router from './router'
+import App from './App.vue';
 createApp({})
     .use(store)
+    .use(router)
     .use(createBootstrap())
-    .component('ProductList', ProductListComponent)
+    .component('AppComponent', App)
     .mount("#app")
     
 import '@fontsource/source-sans-3/index.css'

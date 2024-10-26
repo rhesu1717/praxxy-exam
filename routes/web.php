@@ -18,9 +18,13 @@ Route::middleware(['auth'])->group(function () {
         return view('pages.dashboard.index');
     })->name('dashboard');
 
-    Route::group(['prefix' => 'product', 'controller' => ProductController::class], function(){
-        Route::get('/', 'index')->name('product.list');
-    });
-
+    // Route::group(['prefix' => 'product', 'controller' => ProductController::class], function(){
+    //     Route::get('/', 'index')->name('product.list');
+    // });
     Route::get('/logout', [AuthenticationController::class, 'logout']);
+
+    Route::get('/{any}', function () {
+        return view('pages.dashboard.index');
+    })->where('any', '.*');
+
 });

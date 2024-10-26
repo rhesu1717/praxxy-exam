@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="row g-5 align-items-center mb-3">
+        <div class="row g-5 align-items-center mb-3 pt-3">
             <div class="col-auto">
                 <label for="search" class="col-form-label">Search:</label>
             </div>
@@ -22,6 +22,11 @@
                 <button type="button" @click="filter" class="btn btn-primary">
                     <i class="nav-arrow bi bi-search"></i>
                 </button>
+            </div>
+            <div class="col-6">
+                <RouterLink to="/product/create" @click="filter" class="btn btn-primary float-right">
+                    Create <i class="nav-arrow bi bi-pencil-square"></i>
+                </RouterLink>
             </div>
         </div>
         <table class="table table-striped table-hover table-bordered">
@@ -119,9 +124,7 @@ const deleteProductItem = async(val) => {
     if(val){
         $store.dispatch('deleteProduct', productId.value).then(() => {
             var myModalEl = document.getElementById('deleteProductItemModal');
-            
             var modal = Modal.getInstance(myModalEl)
-            console.log(Modal)
             modal.hide();
         })
     }else{

@@ -26,13 +26,13 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{route('product.list')}}" class="nav-link">
+                            <a href="/product" class="nav-link">
                                 <i class="nav-icon bi bi-card-list"></i>
                                 <p>List</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./index2.html" class="nav-link">
+                            <a href="/product/create" class="nav-link">
                                 <i class="nav-icon bi bi-pencil-square"></i>
                                 <p>Create</p>
                             </a>

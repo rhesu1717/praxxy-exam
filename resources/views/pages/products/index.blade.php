@@ -1,5 +1,5 @@
 @extends('layouts.master')
 
 @section('content')
-    <product-list />
+    {{-- <product-list /> --}}
 @endsection

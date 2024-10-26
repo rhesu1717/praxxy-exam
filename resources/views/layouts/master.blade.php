@@ -12,7 +12,7 @@
         @include('components.sidebar')
         <main class="app-main"> <!--begin::App Content Header-->
             {{-- BREADCRUMB --}}
-            @include('components.breadcrumb')
+            {{-- @include('components.breadcrumb') --}}
             <div class="app-content"> <!--begin::Container-->
                 <div id="app" class="container-fluid"> <!--begin::Row-->
                     @yield('content')
