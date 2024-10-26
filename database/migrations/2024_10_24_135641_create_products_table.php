@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained('categories');
             $table->longText('description');
             $table->dateTime('date_and_time');
+            $table->softDeletes('deleted_at');
             $table->timestamps();
         });
     }

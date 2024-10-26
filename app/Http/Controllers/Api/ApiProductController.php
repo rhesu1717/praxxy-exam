@@ -66,6 +66,6 @@ class ApiProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        return $this->product->delete($id);
     }
 }

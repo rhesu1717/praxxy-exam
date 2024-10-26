@@ -12,7 +12,7 @@
             </div>
             <div class="col-auto">
                 <select v-model="category_id" id="category" class="form-control">
-                    <option :value="'all'" selected>--All--</option>
+                    <option value='all' selected>--All--</option>
                     <template v-for="(category, key) in categories" :key="key">
                         <option :value="category.id">{{ category.category_name }}</option>
                     </template>
@@ -31,7 +31,7 @@
                     <th>Category</th>
                     <th>Description</th>
                     <th>Date & Time</th>
-                    <th></th>
+                    <th><i class="nav-arrow bi bi-gear-fill"></i></th>
                 </tr>
             </thead>
             <tbody>
@@ -40,6 +40,11 @@
                     <td>{{ product.category?.category_name}}</td>
                     <td>{{ product.description }}</td>
                     <td>{{ product.date_and_time }}</td>
+                    <td>
+                        <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                            <button type="button" @click.prevent="selectForDeleteProductId(product.id)" data-bs-toggle="modal" data-bs-target="#deleteProductItemModal" class="btn btn-sm btn-danger"><i class="nav-arrow bi bi-trash"></i></button>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -53,15 +58,24 @@
             last-text="Last"
             @page-click="pageClick()"
         />
+        <ConfirmDeleteComponent
+            id="deleteProductItemModal"
+            title="Confirm delete"
+            body="Are you sure you want to delete this item?"
+            @confirmDelete="deleteProductItem"
+        />
     </div>
 </template>
 <script setup>
 import { onMounted, computed, ref, nextTick, reactive } from "vue";
 import { useStore } from "vuex";
+import ConfirmDeleteComponent from "../modal/ConfirmDeleteComponent.vue";
+import {Modal} from 'bootstrap'
 
-const currentPage = defineModel(1)
-const search = defineModel('')
-const category_id = defineModel('all')
+const currentPage = ref(1)
+const search = ref('')
+const category_id = ref('all')
+const productId = ref(null)
 const data = reactive({page: currentPage, search, category_id})
 const $store = useStore();
 
@@ -94,5 +108,24 @@ const getProducts = (data) => {
 
 const getCategories = (data) => {
     $store.dispatch('getCategories', data)
+}
+
+const selectForDeleteProductId = (id) =>{
+    productId.value = id
+}
+
+const deleteProductItem = async(val) => {
+    await nextTick()
+    if(val){
+        $store.dispatch('deleteProduct', productId.value).then(() => {
+            var myModalEl = document.getElementById('deleteProductItemModal');
+            
+            var modal = Modal.getInstance(myModalEl)
+            console.log(Modal)
+            modal.hide();
+        })
+    }else{
+        productId.value = null
+    }
 }
 </script>

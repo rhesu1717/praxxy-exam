@@ -12,6 +12,9 @@ export default createStore({
         },
         getCategories(state, payload){
             state.categories = payload
+        },
+        deleteProduct(state, payload){
+            state.products.data = state.products.data.filter(val => val.id!=payload)
         }
     },
     actions: {
@@ -25,6 +28,16 @@ export default createStore({
                 })
                 .then((res) => {
                     commit('getProducts', res.data)
+                })
+        },
+        deleteProduct({commit}, id){
+            return axios.delete(`/api/product/${id}`)
+                .then((res) => {
+                    let isProductDelete = res.data
+
+                    if(isProductDelete){
+                        commit('deleteProduct', id)
+                    }
                 })
         },
         getCategories({commit}, data){

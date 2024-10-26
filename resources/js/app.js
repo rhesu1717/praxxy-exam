@@ -1,6 +1,5 @@
 import './bootstrap';
 import {createBootstrap} from 'bootstrap-vue-next'
-import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
 import {createApp} from 'vue'
 import store from './store'
@@ -19,7 +18,6 @@ import {
 import 'bootstrap-icons/font/bootstrap-icons.min.css'
 import 'admin-lte/dist/css/adminlte.css'
 import '@popperjs/core/dist/umd/popper.min.js'
-import 'bootstrap/dist/js/bootstrap.min.js'
 import 'admin-lte/dist/js/adminlte.js'
 
 const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";
