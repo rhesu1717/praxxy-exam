@@ -1,16 +1,16 @@
 <template>
     <div>
-        <div class="row g-5 align-items-center mb-3 pt-3">
-            <div class="col-auto">
+        <div class="row align-items-center mb-3 pt-3">
+            <div class="col-1 w-auto">
                 <label for="search" class="col-form-label">Search:</label>
             </div>
-            <div class="col-auto">
+            <div class="col-1 w-auto">
                 <input type="text" v-model="search" id="search" class="form-control" placeholder="Search">
             </div>
-            <div class="col-auto">
+            <div class="col-1 w-auto">
                 <label for="category" class="col-form-label">Category:</label>
             </div>
-            <div class="col-auto">
+            <div class="col-1 w-auto">
                 <select v-model="category_id" id="category" class="form-control">
                     <option value='all' selected>--All--</option>
                     <template v-for="(category, key) in categories" :key="key">
@@ -18,12 +18,12 @@
                     </template>
                 </select>
             </div>
-            <div class="col-auto">
+            <div class="col-1 w-auto">
                 <button type="button" @click="filter" class="btn btn-primary">
                     <i class="nav-arrow bi bi-search"></i>
                 </button>
             </div>
-            <div class="col-6">
+            <div class="col-7">
                 <RouterLink to="/product/create" @click="filter" class="btn btn-primary float-right">
                     Create <i class="nav-arrow bi bi-pencil-square"></i>
                 </RouterLink>
