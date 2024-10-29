@@ -1,5 +1,5 @@
 <template>
-    <Steppy :step="step" :finalize="finalize" @update:step="updateStep" primaryColor1="#343a40" doneText="Create">
+    <Steppy :step="step" :finalize="finalize" @update:step="updateStep" primaryColor1="#343a40" doneText="Save">
         <template #1>
             <div class="row">
                 <div class="col-md-12">
@@ -50,13 +50,13 @@
                     class-name="my-pond"
                     allow-multiple="true"
                     accepted-file-types="image/*"
+                    :files="productImages"
                     :required="true"
                     label-idle="Drag & Drop your images or <u>Browse</u>"
                     :allowFileTypeValidation="true"
                     :fileValidateTypeDetectType="validateImages"
                     :dropValidation="true"
                     :beforePrepareFile="beforePrepareFile"
-                    @processfilerevert="(res)=>console.log()"
                     :server="{
                         // url: '/api/product/upload',
                         headers: {
@@ -92,7 +92,7 @@
     import { useVuelidate } from '@vuelidate/core'
     import { required, requiredIf } from '@vuelidate/validators'
     import { Ckeditor } from '@ckeditor/ckeditor5-vue';
-    import { useRouter } from 'vue-router'
+    import { useRouter, useRoute } from 'vue-router'
 
     // Import FilePond
     import vueFilePond from 'vue-filepond';
@@ -115,7 +115,9 @@
     const pond = useTemplateRef('pond')
     const isImageRequired = ref(false);
     const imageUploaded = ref([]);
+    const productImages = ref([]);
     const router = useRouter()
+    const route = useRoute()
     const csrfToken = inject('csrfToken')
 
     const form = reactive({
@@ -153,11 +155,11 @@
 
     onBeforeMount(() => {
         getCategories()
+        getProductDetails()
     })
     onMounted(() => {
         v$.value.step1.description.required.value = false
     });
-
 
     const updateStep = async(nextStep) => {
         
@@ -185,15 +187,16 @@
         nextTick()
         const result = await v$.value.step3.$validate()
         if(result){
-            axios.post('/api/product',{
+            axios.put(`/api/product/${route.params.id}`,{
                 name: form.step1.name,
                 categoryId: form.step1.categoryId,
                 description: form.step1.description,
                 dateTime: form.step3.dateTime,
                 tempImagesUploaded: imageUploaded.value
             }).then((res) => {
-                if(res.status == 201){
-                    router.push({ path: '/product', query:{success: 'Product added successfully'} })
+                console.log(res)
+                if(res.status == 200){
+                    router.push({ path: '/product', query:{success: 'Product updated successfully'} })
                 }
             })  
         }
@@ -241,6 +244,19 @@
             imageUploaded.value = imageUploaded.value.filter(image => image !== result)
             axios.delete(`/api/product/destroy/${result}`)
             load()
+        })
+    }
+
+    const getProductDetails = async() => {
+        nextTick()
+        $store.dispatch('getProductDetails', route.params.id).then((res) => {
+            form.step1.name = res.name
+            form.step1.categoryId = res.category_id
+            form.step1.description = res.description
+            form.step3.dateTime = res.date_and_time
+            productImages.value = res.images.map(val => {
+                return `/products/tmp/${val.folder}/${val.filename}`
+            })
         })
     }
 </script>

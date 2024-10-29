@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products');
             $table->string('folder');
             $table->string('filename');
+            $table->softDeletes('deleted_at');
             $table->timestamps();
         });
     }

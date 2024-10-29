@@ -4,6 +4,7 @@ import ProductListComponent from '../components/products/ProductListComponent.vu
 import DashboardComponent from '../components/dashboard/Index.vue'
 import PageNotFoundComponent from '../components/pagenotfound/index.vue'
 import ProductCreateComponent from '../components/products/ProductCreateComponent.vue'
+import ProductEditComponent from '../components/products/ProductEditComponent.vue'
 
 const routes = [
     {
@@ -20,6 +21,10 @@ const routes = [
             {
                 path: 'create',
                 component: ProductCreateComponent
+            },
+            {
+                path: ':id/edit',
+                component: ProductEditComponent
             }
         ]
     },

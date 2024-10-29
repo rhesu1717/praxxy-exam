@@ -54,7 +54,11 @@ class ApiProductController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $result =  $this->product->edit($id);
+
+        return response()->json([
+            'data' => $result
+        ],200);
     }
 
     /**
@@ -62,7 +66,17 @@ class ApiProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $result =  $this->product->update($request, $id);
+
+        if($result){
+            return response()->json([
+                'success' => true
+            ], 200);
+        }else{
+            return response()->json([
+                'success' => false
+            ], 400);
+        }
     }
 
     /**

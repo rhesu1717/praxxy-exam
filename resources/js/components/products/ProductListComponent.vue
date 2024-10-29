@@ -28,7 +28,7 @@
             </div>
             <div class="col-7">
                 <RouterLink to="/product/create" @click="filter" class="btn btn-primary float-right">
-                    Create <i class="nav-arrow bi bi-pencil-square"></i>
+                    Create <i class="nav-arrow bi bi-plus-square"></i>
                 </RouterLink>
             </div>
         </div>
@@ -51,6 +51,7 @@
                     <td>
                         <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                             <button type="button" @click.prevent="selectForDeleteProductId(product.id)" data-bs-toggle="modal" data-bs-target="#deleteProductItemModal" class="btn btn-sm btn-danger"><i class="nav-arrow bi bi-trash"></i></button>
+                            <RouterLink :to="`/product/${product.id}/edit`" class="btn btn-sm btn-success"><i class="nav-arrow bi bi-pencil-square"></i></RouterLink>
                         </div>
                     </td>
                 </tr>

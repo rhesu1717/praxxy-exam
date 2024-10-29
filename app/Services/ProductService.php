@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Interfaces\ImageUploadInterface;
 use App\Interfaces\ProductInterface;
 use App\Models\Product;
 use App\Models\ProductImage;
@@ -9,6 +10,11 @@ use App\Models\TemporaryFile;
 use Illuminate\Support\Facades\DB;
 
 class ProductService implements ProductInterface{
+
+    public function __construct(
+        protected ImageUploadInterface $image_upload
+    ) {
+    }
     
     public function list($request){
 
@@ -71,5 +77,43 @@ class ProductService implements ProductInterface{
             DB::rollBack();
             return response()->json([], 400);
         } 
+    }
+
+    public function edit($id){
+        $productDetails = Product::with('images')->where('id', $id)->first();
+        return $productDetails;
+    }
+
+    public function update($request, $id){
+        try {
+            $name = $request->name;
+            $categoryId = $request->categoryId;
+            $description = $request->description;
+            $date_and_time = $request->dateTime;
+            $tempImagesUploaded = $request->tempImagesUploaded;
+
+            DB::beginTransaction();
+
+            Product::where('id', $id)
+                ->update(['name' => $name, 'category_id' => $categoryId, 'description' => $description, 'date_and_time' => $date_and_time]);
+            
+            // Remove old images
+            ProductImage::where('product_id', $id)->delete();
+            
+            // Insert updated images
+            foreach ($tempImagesUploaded as $image) {
+                $tmp = TemporaryFile::where('folder', $image)->first();
+
+                ProductImage::create(['product_id' => $id, 'folder' => $tmp->folder, 'filename' => $tmp->filename]);
+            }
+
+            DB::commit();
+
+            return true;
+        } catch (\Exception $e) {
+            //throw $th;
+            DB::rollBack();
+            return false;
+        }
     }
 }
