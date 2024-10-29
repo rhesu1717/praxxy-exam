@@ -1,4 +1,5 @@
 <template>
+    <router-view name="Breadcrumb"/>
     <router-view/>
 </template>
 <script setup>

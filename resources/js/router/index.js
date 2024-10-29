@@ -5,26 +5,44 @@ import DashboardComponent from '../components/dashboard/Index.vue'
 import PageNotFoundComponent from '../components/pagenotfound/index.vue'
 import ProductCreateComponent from '../components/products/ProductCreateComponent.vue'
 import ProductEditComponent from '../components/products/ProductEditComponent.vue'
+import Breadcrumb from '../components/breadcrumb/Index.vue'
 
 const routes = [
     {
         path: '/dashboard',
-        component: DashboardComponent
+        components: {
+            default: DashboardComponent,
+            Breadcrumb
+        },
+        name: 'dashboard'
     },
     {
         path: '/product',
+        name: 'product',
         children: [
             {
                 path: '',
-                component: ProductListComponent
+                name: 'list',
+                components: {
+                    default: ProductListComponent,
+                    Breadcrumb
+                },
             },
             {
                 path: 'create',
-                component: ProductCreateComponent
+                name: 'create',
+                components: {
+                    default: ProductCreateComponent,
+                    Breadcrumb
+                },
             },
             {
                 path: ':id/edit',
-                component: ProductEditComponent
+                name: 'edit',
+                components: {
+                    default: ProductEditComponent,
+                    Breadcrumb
+                },
             }
         ]
     },
