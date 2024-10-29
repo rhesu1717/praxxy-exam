@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div class="alert alert-success mt-3" role="alert" v-if="successMessage">
+            {{successMessage}}
+        </div>
         <div class="row align-items-center mb-3 pt-3">
             <div class="col-1 w-auto">
                 <label for="search" class="col-form-label">Search:</label>
@@ -43,7 +46,7 @@
                 <tr v-for="(product, index) in products.data" :key="index" align="center">
                     <td>{{ product.name }}</td>
                     <td>{{ product.category?.category_name}}</td>
-                    <td>{{ product.description }}</td>
+                    <td v-html="product.description"></td>
                     <td>{{ product.date_and_time }}</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Basic mixed styles example">
@@ -76,7 +79,9 @@ import { onMounted, computed, ref, nextTick, reactive } from "vue";
 import { useStore } from "vuex";
 import ConfirmDeleteComponent from "../modal/ConfirmDeleteComponent.vue";
 import {Modal} from 'bootstrap'
+import { useRoute } from "vue-router";
 
+const route = useRoute()
 const currentPage = ref(1)
 const search = ref('')
 const category_id = ref('all')
@@ -90,6 +95,10 @@ const products = computed(() => {
 
 const categories = computed(() => {
     return $store.state.categories
+})
+
+const successMessage = computed(() => {
+    return route.query.success
 })
 
 onMounted(() => {

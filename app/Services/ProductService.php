@@ -4,6 +4,9 @@ namespace App\Services;
 
 use App\Interfaces\ProductInterface;
 use App\Models\Product;
+use App\Models\ProductImage;
+use App\Models\TemporaryFile;
+use Illuminate\Support\Facades\DB;
 
 class ProductService implements ProductInterface{
     
@@ -27,7 +30,7 @@ class ProductService implements ProductInterface{
             });
         }
         
-        $products = $products->paginate();
+        $products = $products->orderBy('created_at', 'desc')->paginate();
 
         return $products;
     }
@@ -40,5 +43,33 @@ class ProductService implements ProductInterface{
         }else{
             return false;
         }
+    }
+
+    public function store($request){
+        try {
+            
+            $name = $request->name;
+            $categoryId = $request->categoryId;
+            $description = $request->description;
+            $date_and_time = $request->dateTime;
+            $tempImagesUploaded = $request->tempImagesUploaded;
+
+            DB::beginTransaction();
+            
+            $product = Product::create(['name' => $name, 'category_id' => $categoryId, 'description' => $description, 'date_and_time' => $date_and_time]);
+
+            foreach ($tempImagesUploaded as $image) {
+                $tmp = TemporaryFile::where('folder', $image)->first();
+
+                ProductImage::create(['product_id' => $product->id, 'folder' => $tmp->folder, 'filename' => $tmp->filename]);
+            }
+
+            DB::commit();
+
+            return response()->json([],201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([], 400);
+        } 
     }
 }

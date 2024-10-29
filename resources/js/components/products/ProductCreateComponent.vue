@@ -42,44 +42,94 @@
                 </div>
             </div>
         </template>
-        <template #2>Vivamus porttitor sodales ipsum in interdum. Proin suscipit ac nunc a
-            tristique. Curabitur et pharetra diam, nec porttitor risus. Curabitur vel
-            mauris est. In tempor nibh sed dapibus tincidunt. Donec id pharetra nunc,
-            at rhoncus dui. Nulla in feugiat ante. Maecenas euismod justo eget
-            dignissim faucibus. Nam elementum dolor sit amet felis sodales luctus.
-            Aenean et lacus varius, mollis mi nec, posuere lectus. Pellentesque tempor
-            sapien a magna fringilla iaculis.
+        <template #2>
+            <div>
+                <label for="productDescription" :class="['form-label', {'is-invalid': isImageRequired}]">Upload Images</label>
+                <FilePond
+                    ref="pond"
+                    class-name="my-pond"
+                    allow-multiple="true"
+                    accepted-file-types="image/*"
+                    :required="true"
+                    label-idle="Drag & Drop your images or <u>Browse</u>"
+                    :allowFileTypeValidation="true"
+                    :fileValidateTypeDetectType="validateImages"
+                    :dropValidation="true"
+                    :beforePrepareFile="beforePrepareFile"
+                    @processfilerevert="(res)=>console.log()"
+                    :server="{
+                        // url: '/api/product/upload',
+                        headers: {
+                            'X-CSRF-TOKEN':csrfToken
+                        },
+                        process: {
+                            url: '/api/product/upload',
+                            onload: handleFilePondLoad
+                        },
+                        revert: handleFilePondRevert
+                    }"
+                />
+                <div class="invalid-feedback" v-if="isImageRequired">
+                    Please upload an image.
+                </div>
+            </div>
         </template>
-        <template #3>Etiam in turpis erat. Vestibulum auctor vel nibh eget vehicula. Integer
-            finibus libero a ex vehicula pharetra. Suspendisse dapibus ipsum elit, nec
-            euismod sapien laoreet ac. Proin ex arcu, commodo nec faucibus ac,
-            pellentesque sed purus. Maecenas vitae ullamcorper nunc. Fusce dapibus
-            lacinia dolor non tristique. Sed eu volutpat enim. Donec nisi nulla,
-            eleifend quis mollis eu, posuere nec lorem. Donec id libero ex. Aliquam ut
-            massa dolor.
+        <template #3>
+            <label for="productDateTime" :class="['form-label', {'is-invalid': v$.step3.dateTime.$error}]">Date & Time</label>
+            <input id="productDateTime" type="datetime-local" v-model="v$.step3.dateTime.$model" class="form-control">
+            <div class="invalid-feedback" v-if="v$.step3.dateTime.$error">
+                Date & Time is required.
+            </div>
         </template>
     </Steppy>
 </template>
 <script setup>
-    import {Steppy} from 'vue3-steppy'
-    import { ref, computed, onMounted, reactive, onBeforeMount } from 'vue';
+    // import {Steppy} from 'vue3-steppy'
+    import Steppy from '../steppy/Vue3Steppy.vue'
+    import { ref, computed, onMounted, reactive, onBeforeMount, useTemplateRef, inject, nextTick } from 'vue';
     import { useStore } from "vuex";
     import { ClassicEditor, Bold, Essentials, Italic, Undo, Code, CodeBlock, Heading, Paragraph, List, Alignment } from 'ckeditor5';
     import { useVuelidate } from '@vuelidate/core'
-    import { required } from '@vuelidate/validators'
+    import { required, requiredIf } from '@vuelidate/validators'
     import { Ckeditor } from '@ckeditor/ckeditor5-vue';
+    import { useRouter } from 'vue-router'
+
+    // Import FilePond
+    import vueFilePond from 'vue-filepond';
+
+    // Import plugins
+    import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js';
+    import FilePondPluginImagePreview from 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.esm.js';
+
+    // Import styles
+    import 'filepond/dist/filepond.min.css';
+    import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
+
+    // Create FilePond component
+    const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview);
     import 'ckeditor5/ckeditor5.css';
 
     const step = ref(1);
     const $store = useStore();
     const editor = ref(ClassicEditor);
+    const pond = useTemplateRef('pond')
+    const isImageRequired = ref(false);
+    const imageUploaded = ref([]);
+    const router = useRouter()
+    const csrfToken = inject('csrfToken')
 
     const form = reactive({
         step1:{
             name: '',
             categoryId: '',
             description: ''
-        }
+        },
+        step2:{
+            images: imageUploaded.value
+        },
+        step3:{
+            dateTime: ''
+        },
     })
 
     const categories = computed(() => {
@@ -92,6 +142,9 @@
                 name: { required },
                 categoryId: { required },
                 description: { required }
+            },
+            step3: {
+                dateTime:{required}
             }
         }
     })
@@ -116,7 +169,9 @@
                     }
                 break;
             case 2:
-                
+                    if(handleFilePondInit()){
+                        step.value = nextStep
+                    }
                 break;
         
             default:
@@ -125,12 +180,68 @@
         
     }
 
-    const finalize = (event) => {
-        console.log(event)
+    const finalize = async() => {
+        
+        nextTick()
+        const result = await v$.value.step3.$validate()
+        if(result){
+            axios.post('/api/product',{
+                name: form.step1.name,
+                categoryId: form.step1.categoryId,
+                description: form.step1.description,
+                dateTime: form.step3.dateTime,
+                tempImagesUploaded: imageUploaded.value
+            }).then((res) => {
+                if(res.status == 201){
+                    router.push({ path: '/product', query:{success: 'Product added successfully'} })
+                }
+            })  
+        }
     }
 
     const getCategories = (data) => {
         $store.dispatch('getCategories', data)
+    }
+
+    const handleFilePondInit = () => {
+
+        if(pond.value._pond.getFiles().length > 0){
+            isImageRequired.value = false
+            return true
+        }
+        isImageRequired.value = true
+        return false
+    }
+
+    const validateImages = (source, type) =>{
+        return new Promise((resolve, reject) => {
+            if(type.startsWith('image/')){
+                resolve(type)
+            }
+            reject(type)
+        })
+        
+    }
+
+    const beforePrepareFile = () => {
+        handleFilePondInit()
+    }
+
+    const handleFilePondLoad = async(res) => {
+        imageUploaded.value = [...imageUploaded.value, res]
+
+        return res
+    }
+
+    const handleFilePondRevert = (uniqueId, load, error) => {
+        const res = new Promise((resolve, reject) => {
+            resolve(uniqueId)
+        })
+        res.then((result) => {
+            imageUploaded.value = imageUploaded.value.filter(image => image !== result)
+            axios.delete(`/api/product/destroy/${result}`)
+            load()
+        })
     }
 </script>
 <style scoped>

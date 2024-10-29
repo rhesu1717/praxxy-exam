@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Product\ProductStoreRequest;
+use App\Interfaces\ImageUploadInterface;
 use App\Interfaces\ProductInterface;
+use App\Models\TemporaryFile;
 use Illuminate\Http\Request;
 
 class ApiProductController extends Controller
 {
 
     public function __construct(
-        protected ProductInterface $product
+        protected ProductInterface $product,
+        protected ImageUploadInterface $image_upload
     ) {
     }
     /**
@@ -32,9 +36,9 @@ class ApiProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        //
+        return $this->product->store($request);
     }
 
     /**
@@ -67,5 +71,14 @@ class ApiProductController extends Controller
     public function destroy(string $id)
     {
         return $this->product->delete($id);
+    }
+
+    public function upload(Request $request)
+    {
+        return $this->image_upload->upload($request);
+    }
+
+    public function imageDelete($folder){
+        return response($this->image_upload->deleteFile($folder));
     }
 }
