@@ -4,6 +4,7 @@ export default createStore({
     state: {
         products: [],
         categories: [],
+        videos: [],
         productDetails: {
             name: '',
             categoryId: '',
@@ -27,6 +28,9 @@ export default createStore({
             state.productDetails.categoryId = payload.category_id
             state.productDetails.description = payload.description
             state.productDetails.images = payload.images
+        },
+        getVideos(state, payload){
+            state.videos = payload.data.data
         }
     },
     actions: {
@@ -64,7 +68,17 @@ export default createStore({
                     return res.data?.data
                     // commit('getProductDetails', res.data?.data)
                 })
-        }
+        },
+        getVideos({commit}, data){
+            return axios.get('/api/video',{
+                    params:{
+                        search: data.search,
+                    }
+                })
+                .then((res) => {
+                    commit('getVideos', res.data)
+                })
+        },
     },
     modules: {
     },

@@ -39,6 +39,27 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-play-btn-fill"></i>
+                    <p>
+                        Videos
+                        <i class="nav-arrow bi bi-chevron-right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="/video" class="nav-link">
+                            <i class="nav-icon bi bi-card-list"></i>
+                            <p>List</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/video/create" class="nav-link">
+                            <i class="nav-icon bi bi-pencil-square"></i>
+                            <p>Create</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
             </ul> <!--end::Sidebar Menu-->
         </nav>
     </div> <!--end::Sidebar Wrapper-->

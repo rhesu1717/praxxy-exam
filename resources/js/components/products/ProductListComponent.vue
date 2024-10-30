@@ -27,7 +27,7 @@
                 </button>
             </div>
             <div class="col-7">
-                <RouterLink to="/product/create" @click="filter" class="btn btn-primary float-right">
+                <RouterLink to="/product/create" class="btn btn-primary float-right">
                     Create <i class="nav-arrow bi bi-plus-square"></i>
                 </RouterLink>
             </div>

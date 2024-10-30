@@ -6,6 +6,8 @@ import PageNotFoundComponent from '../components/pagenotfound/index.vue'
 import ProductCreateComponent from '../components/products/ProductCreateComponent.vue'
 import ProductEditComponent from '../components/products/ProductEditComponent.vue'
 import Breadcrumb from '../components/breadcrumb/Index.vue'
+import VideoListComponent from '../components/videos/Index.vue'
+import VideoCreateComponent from '../components/videos/Create.vue'
 
 const routes = [
     {
@@ -44,6 +46,28 @@ const routes = [
                     Breadcrumb
                 },
             }
+        ]
+    },
+    {
+        path: '/video',
+        name: 'video',
+        children: [
+            {
+                path: '',
+                name: 'Video list',
+                components: {
+                    default: VideoListComponent,
+                    Breadcrumb
+                },
+            },
+            {
+                path: 'create',
+                name: 'Create Video',
+                components: {
+                    default: VideoCreateComponent,
+                    Breadcrumb
+                },
+            },
         ]
     },
     {
