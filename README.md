@@ -31,6 +31,14 @@ Run the database seeder and you're done
 ```
 php artisan db:seed
 ```
+Run npm module
+```
+npm install
+```
+Run npm build
+```
+npm run build
+```
 Start the local development server
 ```
 php artisan serve
