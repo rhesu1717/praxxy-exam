@@ -27,6 +27,11 @@ Run the database migrations (Set the database connection in .env before migratin
 ```
 php artisan migrate
 ```
+> [!WARNING]
+> The SQLite database configured for this application does not exist: C:\ComputerName\praxxy-exam\database\database.sqlite.
+> Would you like to create it? (yes/no) [yes]
+> yes
+
 Run the database seeder and you're done
 ```
 php artisan db:seed
