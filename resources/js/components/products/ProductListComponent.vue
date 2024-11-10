@@ -42,8 +42,8 @@
                     <th><i class="nav-arrow bi bi-gear-fill"></i></th>
                 </tr>
             </thead>
-            <tbody>
-                <tr v-for="(product, index) in products.data" :key="index" align="center">
+            <TransitionGroup tag="tbody" name="list">
+                <tr v-for="(product, index) in products.data" :key="product.id" align="center">
                     <td>{{ product.name }}</td>
                     <td>{{ product.category?.category_name}}</td>
                     <td v-html="product.description"></td>
@@ -55,7 +55,7 @@
                         </div>
                     </td>
                 </tr>
-            </tbody>
+            </TransitionGroup>
         </table>
         <BPagination
             v-model="currentPage"
@@ -142,3 +142,14 @@ const deleteProductItem = async(val) => {
     }
 }
 </script>
+<style scoped>
+    .list-enter-active,
+    .list-leave-active {
+        transition: all 0.5s ease;
+    }
+    .list-enter-from,
+    .list-leave-to {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+</style>
